@@ -5,41 +5,80 @@ function setup(){
     canvasE1.height =  canvasCtx.height = window.innerHeight;
 }
 
-function draw(){
-    // cor do campo
-    canvasCtx.fillStyle = '#d6e2e6'
-    canvasCtx.fillRect(0, 0, window.innerWidth, window.innerHeight)
+const campo = {
+    w: window.innerWidth,
+    h: window.innerHeight,
+    draw: function(){
+        canvasCtx.fillStyle = '#d6e2e6'
+        canvasCtx.fillRect(0, 0, this.w, this.h)
+    }
+}
 
-    //desenho a linha do meio campo
-    const lineWidth = 10
-    canvasCtx.fillStyle = '#00000052'
+const linha = {
+    w: 10,
 
-    canvasCtx.fillRect(window.innerWidth / 2 - lineWidth / 2, 0, lineWidth, window.innerHeight)
+    draw: function(){
+        canvasCtx.fillStyle = '#00000052'
+        canvasCtx.fillRect(campo.w / 2 - this.w / 2, 0, this.w, campo.h)
+    }
+}
 
-    //desenho da raquete esquerda
+const raqueteEsquerda = {
+    x: 10,
+    y: 100,
+    w: 10,
+    h: 150,
 
-    canvasCtx.fillRect(10, 100, lineWidth, 150)
+    draw: function(){
+        canvasCtx.fillRect(this.x, this.y, this.w, this.h)
+    }
+}
 
-    //desenho da raquete direita
+const raqueteDireita = {
+    x: campo.w - linha.w - 10,
+    y: 100,
+    w: 10,
+    h: 150,
 
-    canvasCtx.fillRect(window.innerWidth - lineWidth - 10, 100, lineWidth, 150)
+    draw: function(){
+        canvasCtx.fillRect(this.x, this.y, this.w, this.h)
+    }
+}
 
-    //desenho da bolinha
+const bolinha = {
+    x: 200,
+    y: 300,
+    r: 20,
 
-    canvasCtx.fillStyle = '#000'
+    draw: function(){
+        canvasCtx.fillStyle = '#000'
 
-    canvasCtx.beginPath()
-    canvasCtx.arc(200, 300, 20, 0, 2 * Math.PI, false)
-    canvasCtx.fill()
+        canvasCtx.beginPath()
+        canvasCtx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false)
+        canvasCtx.fill()
+    }
 
-    //desenho do placar 
+}
+
+const placar = {
+    draw: function(){
     canvasCtx.font = 'bold 40px Arial'
     canvasCtx.textAlign = 'center'
     canvasCtx.textBaseline = 'top'
     canvasCtx.fillStyle = '#fff'
-    canvasCtx.fillText('3', window.innerWidth/4, 30)
-    canvasCtx.fillText('5', 3 * window.innerWidth/4, 30)
+    canvasCtx.fillText('3', campo.w / 4, 30)
+    canvasCtx.fillText('5', 3 * campo.w / 4, 30)
 
+    }
+}
+
+function draw(){
+    campo.draw()
+    linha.draw()
+    raqueteEsquerda.draw()
+    raqueteDireita.draw()
+    bolinha.draw()
+    placar.draw()
 }
 
 setup()
