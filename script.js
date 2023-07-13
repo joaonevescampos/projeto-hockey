@@ -6,10 +6,11 @@ function setup(){
 }
 
 function draw(){
-    canvasCtx.fillStyle = '#d6d6d6'
+    // cor do campo
+    canvasCtx.fillStyle = '#d6e2e6'
     canvasCtx.fillRect(0, 0, window.innerWidth, window.innerHeight)
 
-    //desenho do meio campo
+    //desenho a linha do meio campo
     const lineWidth = 10
     canvasCtx.fillStyle = '#00000052'
 
