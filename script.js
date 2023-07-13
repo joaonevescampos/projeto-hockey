@@ -1,10 +1,11 @@
-const canvasE1 = document.querySelector('canvas'), canvasCtx = canvasE1.getContext('2d');
+const canvasEl = document.querySelector('canvas'), canvasCtx = canvasEl.getContext('2d');
 
 function setup(){
-    canvasE1.width =  canvasCtx.width = window.innerWidth;
-    canvasE1.height =  canvasCtx.height = window.innerHeight;
+    canvasEl.width =  canvasCtx.width = window.innerWidth;
+    canvasEl.height =  canvasCtx.height = window.innerHeight;
 }
 
+const mouse = {x: 0, y: 0}
 const campo = {
     w: window.innerWidth,
     h: window.innerHeight,
@@ -29,8 +30,13 @@ const raqueteEsquerda = {
     w: 10,
     h: 150,
 
+    _mover: function() {
+        this.y = mouse.y - this.h / 2
+    },
+
     draw: function(){
         canvasCtx.fillRect(this.x, this.y, this.w, this.h)
+        this._mover()
     }
 }
 
@@ -40,24 +46,14 @@ const raqueteDireita = {
     w: 10,
     h: 150,
 
+    _mover: function(){
+        this.y = bolinha.y
+    },
+
     draw: function(){
         canvasCtx.fillRect(this.x, this.y, this.w, this.h)
+        this._mover()
     }
-}
-
-const bolinha = {
-    x: 200,
-    y: 300,
-    r: 20,
-
-    draw: function(){
-        canvasCtx.fillStyle = '#000'
-
-        canvasCtx.beginPath()
-        canvasCtx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false)
-        canvasCtx.fill()
-    }
-
 }
 
 const placar = {
@@ -72,14 +68,66 @@ const placar = {
     }
 }
 
+const bolinha = {
+    x: 200,
+    y: 300,
+    r: 20,
+    velocidade: 2,
+    _mover: function(){
+        this.x += 1 * this.velocidade
+        this.y += 1 * this.velocidade
+
+    },
+
+    draw: function(){
+        canvasCtx.fillStyle = '#000'
+
+        canvasCtx.beginPath()
+        canvasCtx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false)
+        canvasCtx.fill()
+
+        this._mover()
+    },
+
+}
+
 function draw(){
     campo.draw()
     linha.draw()
     raqueteEsquerda.draw()
     raqueteDireita.draw()
-    bolinha.draw()
     placar.draw()
+    bolinha.draw()
+   
+    
+}
+
+window.animateFrame = (function () {
+    return (
+        window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function (callback){
+            return window.setTimeout(callback, 1000 / 60)
+        }
+    )
+})()
+
+function main(){
+    animateFrame(main)
+    draw()
 }
 
 setup()
-draw()
+main()
+
+canvasEl.addEventListener('mousemove', function(e){
+    mouse.x = e.pageX
+    mouse.y = e.pageY
+
+    console.log(mouse)
+})
+
+
