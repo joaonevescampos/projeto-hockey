@@ -77,7 +77,7 @@ const raqueteEsquerda = {
     x: campo.espaco,
     y: 100,
     w: 10,
-    h: 150,
+    h: 120,
 
     _mover: function() {
         this.y = mouse.y - this.h / 2
@@ -96,7 +96,7 @@ const raqueteDireita = {
     x: campo.w - linha.w - campo.espaco,
     y: 100,
     w: 10,
-    h: 150,
+    h: 120,
     velocidade: 1,
     
 
