@@ -23,14 +23,57 @@ const linha = {
     w: 10,
 
     draw: function(){
-        canvasCtx.fillStyle = '#00000052'
+        canvasCtx.fillStyle = '#00000030'
         canvasCtx.fillRect(campo.w / 2 - this.w / 2, 0, this.w, campo.h)
     }
 }
 
+ // Configurando centro circulo do campo
+ const centro = {
+    x: campo.w / 2,
+    y: campo.h / 2,
+    r: 100,
+
+    draw: function(){
+        canvasCtx.fillStyle = '#00000030'
+        canvasCtx.beginPath()
+        canvasCtx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false)
+        canvasCtx.fill()
+    }
+ }
+
+
+  // Configurando semi-circulo esquerdo
+  const semiCirculoEsquerdo = {
+    x: 0,
+    y: campo.h / 2,
+    r: campo.h / 4,
+
+    draw: function(){
+        canvasCtx.fillStyle = '#00000020'
+        canvasCtx.beginPath()
+        canvasCtx.arc(this.x, this.y, this.r, 3 * Math.PI / 2, Math.PI / 2, false)
+        canvasCtx.fill()
+    }
+ }
+
+  // Configurando semi-circulo direito
+  const semiCirculoDireito = {
+    x: campo.w,
+    y: campo.h / 2,
+    r: campo.h / 4,
+
+    draw: function(){
+        canvasCtx.beginPath()
+        canvasCtx.arc(this.x, this.y, this.r, Math.PI / 2, 3 * Math.PI / 2, false)
+        canvasCtx.fill()
+    }
+ }
+
 //configurando raquete esquerda (jogador)
 
 const raqueteEsquerda = {
+    
     x: campo.espaco,
     y: 100,
     w: 10,
@@ -41,6 +84,7 @@ const raqueteEsquerda = {
     },
 
     draw: function(){
+        canvasCtx.fillStyle = '#00000060'
         canvasCtx.fillRect(this.x, this.y, this.w, this.h)
         this._mover()
     }
@@ -113,7 +157,7 @@ const placar = {
     canvasCtx.font = 'bold 40px Arial'
     canvasCtx.textAlign = 'center'
     canvasCtx.textBaseline = 'top'
-    canvasCtx.fillStyle = '#fff'
+    canvasCtx.fillStyle = '#00000070'
     canvasCtx.fillText(this.jogador, campo.w / 4, 30)
     canvasCtx.fillText(this.pc, 3 * campo.w / 4, 30)
 
@@ -210,10 +254,14 @@ const bolinha = {
 function draw(){
     campo.draw()
     linha.draw()
+    centro.draw()
+    semiCirculoEsquerdo.draw()
+    semiCirculoDireito.draw()
     raqueteEsquerda.draw()
     raqueteDireita.draw()
     placar.draw()
     bolinha.draw()
+
 
     if(placar.jogador >= 5 ){
         placar.voceGanhou()
@@ -222,9 +270,6 @@ function draw(){
         placar.vocePerdeu()
     }
         
-    
-   
-    
 }
 
 window.animateFrame = (function () {
