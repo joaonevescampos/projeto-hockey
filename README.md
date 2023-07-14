@@ -1,4 +1,4 @@
-# Projeto-Site-Mandala
+# Projeto-Hockey
  *Bem-vindo ao projeto - "Jogo de Hockey"!*
  
 Este foi um projeto feito usando as tecnologias __HTML e JavaScript.__ Este jogo foi desenvolvendo com a API "Canvas", onde foi possível programar orientado objetos do jogo e criar as animações. O jogo é simples e foi projeto para ser jogado no online no computador. O objetivo do jogo é fazer com que a bolinha bata na parede do adversário, que no caso, é o computador. Quem fizer 5 pontos primeiro, ganha o jogo!
