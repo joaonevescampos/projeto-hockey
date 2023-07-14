@@ -269,7 +269,7 @@ function draw(){
 // Condição de derrota
     }else if(placar.pc >= 5){
         placar.vocePerdeu()
-        raqueteDireita.velocidade += 10
+        raqueteDireita.velocidade += 20
     }
         
 }
