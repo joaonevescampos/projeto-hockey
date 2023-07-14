@@ -70,8 +70,7 @@ const linha = {
     }
  }
 
-//configurando raquete esquerda (jogador)
-
+// Configurando raquete esquerda (jogador)
 const raqueteEsquerda = {
     
     x: campo.espaco,
@@ -90,8 +89,7 @@ const raqueteEsquerda = {
     }
 }
 
-//configurando raquete direita (pc)
-
+// Configurando raquete direita (pc)
 const raqueteDireita = {
     x: campo.w - linha.w - campo.espaco,
     y: 100,
@@ -152,7 +150,7 @@ const placar = {
         canvasCtx.fillText('Recarregue a página com F5 para jogar novamente!', campo.w / 2, 300)
     },
 
-
+// desenho do placar
     draw: function(){
     canvasCtx.font = 'bold 40px Arial'
     canvasCtx.textAlign = 'center'
@@ -164,8 +162,7 @@ const placar = {
     }
 }
 
-//Configurando bolinha do jogo
-
+//Configurando a bolinha do jogo
 const bolinha = {
     x: 200,
     y: 300,
@@ -188,7 +185,6 @@ const bolinha = {
             }else{
                 placar.pontosJogador()
                 this._pontuou()
-
             }
         }
 
@@ -198,6 +194,7 @@ const bolinha = {
             if(this.y + this.r> raqueteEsquerda.y && this.y - this.r < raqueteEsquerda.y + raqueteEsquerda.h){
                 this._reverterX()
 
+            //se não, comuputador pontua
             } else{
                 placar.pontosPc()
                 this._pontuou()
@@ -221,7 +218,7 @@ const bolinha = {
 
     _pontuou: function(){
         if(this.velocidade < 16){
-            raqueteDireita.velocidade += 3
+            raqueteDireita.velocidade += 3.2
             this.velocidade += 2
 
         }else{
@@ -231,12 +228,14 @@ const bolinha = {
         this.y = campo.h / 2
     },
 
+    //movimento da bolinha
     _mover: function(){
         this.x += this.direcaoX * this.velocidade
         this.y += this.direcaoY * this.velocidade
 
     },
 
+    //desenho da bolinha
     draw: function(){
         canvasCtx.fillStyle = '#000'
 
@@ -251,6 +250,7 @@ const bolinha = {
 
 }
 
+//desenho dos objetos do jogo
 function draw(){
     campo.draw()
     linha.draw()
@@ -262,16 +262,18 @@ function draw(){
     placar.draw()
     bolinha.draw()
 
-
+// Condição de vitória
     if(placar.jogador >= 5 ){
-        placar.voceGanhou()
-
+        placar.voceGanhou()     
+      
+// Condição de derrota
     }else if(placar.pc >= 5){
         placar.vocePerdeu()
+        raqueteDireita.velocidade += 10
     }
         
 }
-
+// Animação suave da bolinha
 window.animateFrame = (function () {
     return (
         window.requestAnimationFrame ||
