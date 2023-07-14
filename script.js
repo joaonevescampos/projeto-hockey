@@ -1,20 +1,24 @@
 const canvasEl = document.querySelector('canvas'), canvasCtx = canvasEl.getContext('2d');
 
+
 function setup(){
     canvasEl.width =  canvasCtx.width = window.innerWidth;
     canvasEl.height =  canvasCtx.height = window.innerHeight;
 }
 
 const mouse = {x: 0, y: 0}
+
+// Configurando campo do jogo
 const campo = {
     w: window.innerWidth,
     h: window.innerHeight,
+    espaco: 10,
     draw: function(){
         canvasCtx.fillStyle = '#d6e2e6'
         canvasCtx.fillRect(0, 0, this.w, this.h)
     }
 }
-
+ // Configurando linha central do campo
 const linha = {
     w: 10,
 
@@ -24,8 +28,10 @@ const linha = {
     }
 }
 
+//configurando raquete esquerda (jogador)
+
 const raqueteEsquerda = {
-    x: 10,
+    x: campo.espaco,
     y: 100,
     w: 10,
     h: 150,
@@ -40,14 +46,23 @@ const raqueteEsquerda = {
     }
 }
 
+//configurando raquete direita (pc)
+
 const raqueteDireita = {
-    x: campo.w - linha.w - 10,
+    x: campo.w - linha.w - campo.espaco,
     y: 100,
     w: 10,
     h: 150,
+    velocidade: 1,
+    
 
     _mover: function(){
-        this.y = bolinha.y
+        if(this.y + this.h / 2 < bolinha.y + bolinha.r){
+            this.y += this.velocidade
+        }else{
+            this.y -= this.velocidade
+        }
+        
     },
 
     draw: function(){
@@ -56,26 +71,125 @@ const raqueteDireita = {
     }
 }
 
+// Configurando placar do jogo
 const placar = {
+    jogador: 0,
+    pc: 0,
+
+    pontosJogador: function(){
+        this.jogador ++
+    },
+
+    pontosPc: function(){
+        this.pc ++
+    },
+
+    voceGanhou: function () {
+        canvasCtx.fillStyle = '#1fc01f'
+        canvasCtx.fillRect(0, 0, campo.w, campo.h)
+        canvasCtx.fillStyle = '#fff'
+        canvasCtx.font = 'bold 40px Arial'
+        canvasCtx.textAlign = 'center'
+        canvasCtx.textBaseline = 'top'
+        canvasCtx.fillText('Você Ganhou!', campo.w / 2, 200)
+        canvasCtx.font = 'bold 20px Arial'
+        canvasCtx.fillText('Recarregue a página com F5 para jogar novamente!', campo.w / 2, 300)
+    },
+
+    vocePerdeu: function () {
+        canvasCtx.fillStyle = '#000'
+        canvasCtx.fillRect(0, 0, campo.w, campo.h)
+        canvasCtx.fillStyle = '#ac0707'
+        canvasCtx.font = 'bold 40px Arial'
+        canvasCtx.textAlign = 'center'
+        canvasCtx.textBaseline = 'top'
+        canvasCtx.fillText('Você Perdeu!', campo.w / 2, 200)
+        canvasCtx.font = 'bold 20px Arial'
+        canvasCtx.fillText('Recarregue a página com F5 para jogar novamente!', campo.w / 2, 300)
+    },
+
+
     draw: function(){
     canvasCtx.font = 'bold 40px Arial'
     canvasCtx.textAlign = 'center'
     canvasCtx.textBaseline = 'top'
     canvasCtx.fillStyle = '#fff'
-    canvasCtx.fillText('3', campo.w / 4, 30)
-    canvasCtx.fillText('5', 3 * campo.w / 4, 30)
+    canvasCtx.fillText(this.jogador, campo.w / 4, 30)
+    canvasCtx.fillText(this.pc, 3 * campo.w / 4, 30)
 
     }
 }
+
+//Configurando bolinha do jogo
 
 const bolinha = {
     x: 200,
     y: 300,
     r: 20,
-    velocidade: 2,
+    velocidade: 8,
+    direcaoY : 1,
+    direcaoX: 1,
+    espaco: 10,
+
+
+    _calcPosicao: function(){
+
+        if(this.x > campo.w - this.r - raqueteEsquerda.w - this.espaco) {
+
+            //se pc rebateu na bolinha, ela muda de direcao
+            if(this.y + this.r > raqueteDireita.y && this.y - this.r < raqueteDireita.y + raqueteDireita.h){
+                this._reverterX()
+
+            // se pc não rebateu, jogador fez um ponto
+            }else{
+                placar.pontosJogador()
+                this._pontuou()
+
+            }
+        }
+
+        
+        if(this.x < this.r + raqueteEsquerda.w + campo.espaco){
+            //se o jogador rebateu, a bolinha muda de direção
+            if(this.y + this.r> raqueteEsquerda.y && this.y - this.r < raqueteEsquerda.y + raqueteEsquerda.h){
+                this._reverterX()
+
+            } else{
+                placar.pontosPc()
+                this._pontuou()
+            }
+
+        }
+
+        //se a bolinha bater nas parede superior ou inferior, ela muda de direção
+        if((this.y - this.r < 0 && this.direcaoY < 0) || (this.y > campo.h - this.r && this.direcaoY > 0)){
+            this._reverterY()
+        }
+    },
+
+    _reverterX: function(){
+        this.direcaoX *= -1
+    },
+
+    _reverterY: function(){
+        this.direcaoY *= -1
+    },
+
+    _pontuou: function(){
+        if(this.velocidade < 16){
+            raqueteDireita.velocidade += 3
+            this.velocidade += 2
+
+        }else{
+            this.velocidade += 0.5
+        }
+        this.x = campo.w / 2
+        this.y = campo.h / 2
+    },
+
     _mover: function(){
-        this.x += 1 * this.velocidade
-        this.y += 1 * this.velocidade
+        this.x += this.direcaoX * this.velocidade
+        this.y += this.direcaoY * this.velocidade
 
     },
 
@@ -86,7 +200,9 @@ const bolinha = {
         canvasCtx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false)
         canvasCtx.fill()
 
+        this._calcPosicao()
         this._mover()
+        
     },
 
 }
@@ -98,6 +214,15 @@ function draw(){
     raqueteDireita.draw()
     placar.draw()
     bolinha.draw()
+
+    if(placar.jogador >= 5 ){
+        placar.voceGanhou()
+
+    }else if(placar.pc >= 5){
+        placar.vocePerdeu()
+    }
+        
+    
    
     
 }
@@ -127,7 +252,6 @@ canvasEl.addEventListener('mousemove', function(e){
     mouse.x = e.pageX
     mouse.y = e.pageY
 
-    console.log(mouse)
 })
 
 
